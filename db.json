@@ -1,0 +1,60 @@
+{
+  "tasks": [
+    {
+      "title": "Learn React",
+      "id": "1",
+      "points": 2,
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "title": "Learn TypeScript",
+      "id": "2",
+      "points": 5,
+      "status": "inprogress",
+      "priority": "high"
+    },
+    {
+      "title": "Learn Redux",
+      "id": "3",
+      "points": 4,
+      "status": "todo",
+      "priority": "medium"
+    },
+    {
+      "title": "Learn GraphQL",
+      "id": "4",
+      "points": 3,
+      "status": "todo",
+      "priority": "low"
+    },
+    {
+      "title": "Learn Node",
+      "id": "5",
+      "points": 2,
+      "status": "todo",
+      "priority": "low"
+    },
+    {
+      "title": "Learn Express",
+      "id": "6",
+      "points": 1,
+      "status": "todo",
+      "priority": "low"
+    },
+    {
+      "title": "Learn MongoDB",
+      "id": "7",
+      "points": 2,
+      "status": "todo",
+      "priority": "low"
+    },
+    {
+      "title": "Learn MySQL",
+      "id": "8",
+      "points": 1,
+      "status": "todo",
+      "priority": "low"
+    }
+  ]
+}
