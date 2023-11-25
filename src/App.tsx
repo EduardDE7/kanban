@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { TaskCard } from '@/components';
+import { TStatus, TTask } from '@/types';
+import { statuses } from '@/utils/data-tasks';
 import './App.css';
-import { TaskCard } from './components/TaskCard';
-import { TStatus, TTask, statuses } from './utils/data-tasks';
 
 function App() {
   const [tasks, setTasks] = useState<TTask[]>([]);
@@ -51,9 +52,12 @@ function App() {
   };
 
   return (
-    <div className="flex divide-x">
+    <div className="flex w-screen h-screen divide-x">
       {columns.map((column) => (
         <div
+          className={`  ${
+            currentlyHoveringOver === column.status ? 'bg-gray-100' : ''
+          } transition-colors duration-500`}
           onDrop={(e) => handleDrop(e, column.status)}
           onDragOver={(e) => e.preventDefault()}
           onDragEnter={() => handleDragEnter(column.status)}
@@ -62,14 +66,10 @@ function App() {
             <h2 className="capitalize">{column.status}</h2>
             {column.tasks.reduce(
               (total, task) => total + (task?.points || 0),
-              0
+              0,
             )}
           </div>
-          <div
-            className={`h-full ${
-              currentlyHoveringOver === column.status ? 'bg-gray-100' : ''
-            }`}
-          >
+          <div className={'h-full'}>
             {column.tasks.map((task) => (
               <TaskCard task={task} updateTask={updateTask} />
             ))}

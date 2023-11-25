@@ -1,5 +1,12 @@
-import { TTask } from '../utils/data-tasks';
 import { useState } from 'react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { TTask } from '@/types';
+import { Subtask } from './subtask';
 
 const lowPriorityIcon = (
   <svg
@@ -75,15 +82,24 @@ export const TaskCard = ({
       updateTask({ ...task, points: newPoints });
     }
   };
+
+  const handleSubtaskChange = (subtaskId: string, isChecked: boolean) => {
+    const updatedSubtasks = task.subtasks.map((subtask) =>
+      subtask.id === subtaskId ? { ...subtask, checked: isChecked } : subtask,
+    );
+
+    updateTask({ ...task, subtasks: updatedSubtasks });
+  };
+
   return (
     <div
       draggable
       onDragStart={(e) => {
         e.dataTransfer.setData('id', task.id);
       }}
-      className="w-56 px-2 m-2 border rounded-lg bg-gray-50"
+      className="w-56 px-2 m-2 transition duration-500 border rounded-lg cursor-grab bg-gray-50 group hover:drop-shadow-lg"
     >
-      <div className="py-2 text-base font-base">
+      <div className="flex justify-between py-2 text-base align-middle font-base">
         {isEditingTitle ? (
           <input
             autoFocus
@@ -93,9 +109,36 @@ export const TaskCard = ({
             onChange={(e) => updateTask({ ...task, title: e.target.value })}
           />
         ) : (
-          <div onClick={() => setIsEditingTitle(true)}>{task.title}</div>
+          <div className="cursor-text" onClick={() => setIsEditingTitle(true)}>
+            {task.title}
+          </div>
         )}
+
+        <Sheet>
+          <SheetTrigger className="text-sm text-blue-400 transition-opacity duration-500 opacity-0 group-hover:opacity-100">
+            {/* <Button className="bg-blue-300 opacity-0 rounded-3xl hover:opacity-100"> */}
+            Open
+            {/* </Button> */}
+          </SheetTrigger>
+          <SheetContent>
+            <SheetDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </SheetDescription>
+          </SheetContent>
+        </Sheet>
       </div>
+      {task.subtasks &&
+        task.subtasks.length > 0 &&
+        task.subtasks.map((subtask) => {
+          return (
+            <Subtask
+              key={subtask.id}
+              subtask={subtask}
+              onChange={handleSubtaskChange}
+            />
+          );
+        })}
       <div className="flex justify-between gap-5 py-2 text-sm text-gray-500">
         <div className="flex gap-2">
           <div>{task.id}</div>
@@ -107,7 +150,7 @@ export const TaskCard = ({
         <div className="flex items-center gap-2">
           <button onClick={() => updatePoints('down')}>-</button>
           <div className="font-bold">{points}</div>
-          <button onClick={() => updatePoints('up')}>+</button>
+          <button onClick={() => updatePoints('up')}>+</button>B
         </div>
       </div>
     </div>

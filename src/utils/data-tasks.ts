@@ -1,13 +1,4 @@
-export type TStatus = 'done' | 'inprogress' | 'todo';
-export type TPriority = 'low' | 'medium' | 'high';
-
-export type TTask = {
-  title: string;
-  id: string;
-  status: TStatus;
-  priority: TPriority;
-  points?: number;
-};
+import { TPriority, TStatus } from '@/types';
 
 export const statuses: TStatus[] = ['todo', 'inprogress', 'done'];
 export const priorities: TPriority[] = ['low', 'medium', 'high'];
