@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TaskCard } from '@/components';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { TStatus, TTask } from '@/types';
 import { priorities, statuses } from '@/utils/data-tasks';
 import { Plus } from 'lucide-react';
@@ -85,19 +78,19 @@ function App() {
   };
 
   return (
-    <div className="flex w-screen h-screen divide-x">
+    <div className="flex justify-center w-screen h-full divide-x ">
       {columns.map((column) => (
         <div
           key={column.status}
           className={`  ${
-            currentlyHoveringOver === column.status ? 'bg-gray-100' : ''
+            currentlyHoveringOver === column.status ? 'bg-gray-50/20' : ''
           } transition-colors duration-500 w-64`}
           onDrop={(e) => handleDrop(e, column.status)}
           onDragOver={(e) => e.preventDefault()}
           onDragEnter={() => handleDragEnter(column.status)}
         >
-          <div className="flex justify-between p-2 text-xl font-bold text-gray-600 align-baseline">
-            <div className="flex">
+          <div className="flex justify-between p-2 text-xl text-gray-600 align-baseline">
+            <div className="flex font-bold text-gray-50">
               <h2 className="mr-1 capitalize">{column.status}</h2>
               {column.tasks.reduce(
                 (total, task) => total + (task?.points || 0),
@@ -108,21 +101,15 @@ function App() {
               open={openAddTaskDialog}
               onOpenChange={setOpenAddTaskDialog}
             >
-              <DialogTrigger>
-                <Button
-                  className="p-1 border rounded-xl bg-gray-50 hover:drop-shadow-sm"
-                  variant="secondary"
-                >
-                  <Plus size={18} className="mr-1" /> add task
-                </Button>
-              </DialogTrigger>
+              <Button
+                className="text-base border rounded-xl bg-gray-50 hover:drop-shadow-sm"
+                variant="secondary"
+                onClick={() => setOpenAddTaskDialog(true)}
+              >
+                <Plus size={18} className="" />
+              </Button>
               <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add new task</DialogTitle>
-                  <DialogDescription className="flex">
-                    <NewTaskForm onSubmit={addNewTask} />
-                  </DialogDescription>
-                </DialogHeader>
+                <NewTaskForm onSubmit={addNewTask} />
               </DialogContent>
             </Dialog>
           </div>

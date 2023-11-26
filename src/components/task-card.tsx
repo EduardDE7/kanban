@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
   SheetContent,
@@ -7,11 +8,11 @@ import {
 } from '@/components/ui/sheet';
 import { TTask } from '@/types';
 import {
-  ChevronRight,
-  ChevronsUp,
+  ChevronDown,
   ChevronUp,
-  Minus,
+  FileEdit,
   PlusCircle,
+  Trash,
 } from 'lucide-react';
 import { v4 as uuid4 } from 'uuid';
 import { Subtask } from './subtask';
@@ -70,7 +71,7 @@ export const TaskCard = ({
       onDragStart={(e) => {
         e.dataTransfer.setData('id', task.id);
       }}
-      className="px-2 m-2 transition duration-500 border rounded-xl cursor-grab bg-gray-50 hover:drop-shadow-lg"
+      className="px-2 m-2 transition duration-500 border rounded-xl cursor-grab group bg-gray-50 hover:drop-shadow-lg"
     >
       <div className="flex justify-between h-10 py-2 align-middle ">
         {isEditingTitle ? (
@@ -85,17 +86,23 @@ export const TaskCard = ({
             {task.title}
           </h2>
         )}
-
-        <Sheet>
-          {/* <SheetTrigger className="transition-opacity duration-500 opacity-0 text-primary group-hover:opacity-100"> */}
-          <SheetTrigger className="text-gray-300">
-            {/* <ArrowRightFromLine className="w-5 h-5" /> */}
-            <ChevronRight />
-          </SheetTrigger>
-          <SheetContent>
-            <SheetDescription></SheetDescription>
-          </SheetContent>
-        </Sheet>
+        <div className="flex gap-1.5 text-gray-300 align-middle opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <Sheet>
+            <SheetTrigger className="hover:text-yellow-500">
+              <FileEdit size={16} />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetDescription></SheetDescription>
+            </SheetContent>
+          </Sheet>
+          <Button
+            variant="transparent"
+            className="hover:text-red-500"
+            size="icon"
+          >
+            <Trash size={16} />
+          </Button>
+        </div>
       </div>
       {isAddingSubtask ? (
         <div className="flex">
@@ -131,18 +138,36 @@ export const TaskCard = ({
         })}
       <div className="flex justify-between gap-5 py-2 text-sm text-gray-500">
         <div className="flex gap-2">
-          <div>{task.id}</div>
-          <div>{task.priority}</div>
-          {task.priority === 'high' && <ChevronsUp className="text-red-500" />}
-          {task.priority === 'medium' && (
-            <ChevronUp className="text-yellow-500" />
+          {task.priority === 'high' && (
+            <Badge className="bg-red-500">{task.priority}</Badge>
           )}
-          {task.priority === 'low' && <Minus className="text-blue-400" />}
+          {task.priority === 'medium' && (
+            <Badge className="bg-yellow-500">{task.priority}</Badge>
+          )}
+          {task.priority === 'low' && (
+            <Badge className="bg-green-500">{task.priority}</Badge>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => updatePoints('down')}>-</button>
-          <div className="font-bold">{points}</div>
-          <button onClick={() => updatePoints('up')}>+</button>B
+        <div className="flex items-center gap-1">
+          <div className="flex flex-col">
+            <Button
+              variant="transparent"
+              size="icon"
+              onClick={() => updatePoints('up')}
+            >
+              <ChevronUp size={13} />
+            </Button>
+            <Button
+              variant="transparent"
+              size="icon"
+              onClick={() => updatePoints('down')}
+            >
+              <ChevronDown size={13} />
+            </Button>
+          </div>
+          <Badge className="flex justify-center w-6 align-middle">
+            {points}
+          </Badge>
         </div>
       </div>
     </div>

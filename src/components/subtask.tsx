@@ -9,7 +9,7 @@ export function Subtask({ subtask, onChange }: TSubtaskProps) {
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 text-sm">
       <Checkbox
         className="w-4 h-4 rounded-full"
         id={subtask.id}
@@ -18,7 +18,7 @@ export function Subtask({ subtask, onChange }: TSubtaskProps) {
       />
       <label
         htmlFor={subtask.id}
-        className={subtask.checked ? 'line-through' : ''}
+        className={`${subtask.checked ? 'line-through' : ''}`}
       >
         {subtask.label}
       </label>
