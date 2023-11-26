@@ -6,62 +6,17 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { TTask } from '@/types';
+import {
+  ChevronRight,
+  ChevronsUp,
+  ChevronUp,
+  Minus,
+  PlusCircle,
+} from 'lucide-react';
+import { v4 as uuid4 } from 'uuid';
 import { Subtask } from './subtask';
-
-const lowPriorityIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-6 h-6 text-blue-400"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M5 9l7 7 7-7"
-    />
-  </svg>
-);
-const mediumPriorityIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-6 h-6 text-yellow-500"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M5 10h14"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M5 14h14"
-    />
-  </svg>
-);
-const highPriorityIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-6 h-6 text-red-500"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M5 15l7-7 7 7"
-    />
-  </svg>
-);
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 export const TaskCard = ({
   task,
@@ -71,6 +26,8 @@ export const TaskCard = ({
   updateTask: (task: TTask) => void;
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isAddingSubtask, setIsAddingSubtask] = useState(false);
+  const [subtaskName, setSubtaskName] = useState('');
 
   const points = task.points || 0;
   const updatePoints = (direction: 'up' | 'down') => {
@@ -82,6 +39,22 @@ export const TaskCard = ({
       updateTask({ ...task, points: newPoints });
     }
   };
+
+  function addSubtask() {
+    const newSubtask = {
+      id: uuid4(),
+      label: subtaskName,
+      checked: false,
+    };
+
+    updateTask({
+      ...task,
+      subtasks: [...task.subtasks, newSubtask],
+    });
+
+    setIsAddingSubtask(false);
+    setSubtaskName('');
+  }
 
   const handleSubtaskChange = (subtaskId: string, isChecked: boolean) => {
     const updatedSubtasks = task.subtasks.map((subtask) =>
@@ -97,37 +70,54 @@ export const TaskCard = ({
       onDragStart={(e) => {
         e.dataTransfer.setData('id', task.id);
       }}
-      className="w-56 px-2 m-2 transition duration-500 border rounded-lg cursor-grab bg-gray-50 group hover:drop-shadow-lg"
+      className="px-2 m-2 transition duration-500 border rounded-xl cursor-grab bg-gray-50 hover:drop-shadow-lg"
     >
-      <div className="flex justify-between py-2 text-base align-middle font-base">
+      <div className="flex justify-between h-10 py-2 align-middle ">
         {isEditingTitle ? (
-          <input
+          <Input
             autoFocus
-            className="w-full"
             onBlur={() => setIsEditingTitle(false)}
             value={task.title}
             onChange={(e) => updateTask({ ...task, title: e.target.value })}
           />
         ) : (
-          <div className="cursor-text" onClick={() => setIsEditingTitle(true)}>
+          <h2 className="cursor-text" onClick={() => setIsEditingTitle(true)}>
             {task.title}
-          </div>
+          </h2>
         )}
 
         <Sheet>
-          <SheetTrigger className="text-sm text-blue-400 transition-opacity duration-500 opacity-0 group-hover:opacity-100">
-            {/* <Button className="bg-blue-300 opacity-0 rounded-3xl hover:opacity-100"> */}
-            Open
-            {/* </Button> */}
+          {/* <SheetTrigger className="transition-opacity duration-500 opacity-0 text-primary group-hover:opacity-100"> */}
+          <SheetTrigger className="text-gray-300">
+            {/* <ArrowRightFromLine className="w-5 h-5" /> */}
+            <ChevronRight />
           </SheetTrigger>
           <SheetContent>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription>
+            <SheetDescription></SheetDescription>
           </SheetContent>
         </Sheet>
       </div>
+      {isAddingSubtask ? (
+        <div className="flex">
+          <input
+            autoFocus
+            onBlur={() => setIsAddingSubtask(false)}
+            value={subtaskName}
+            onChange={(e) => setSubtaskName(e.target.value)}
+          />
+          <Button variant="transparent" onClick={() => addSubtask()}>
+            <PlusCircle className="w-5 h-5 ml-2 text-gray-500" />
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className="p-0 text-gray-500"
+          variant="transparent"
+          onClick={() => setIsAddingSubtask(true)}
+        >
+          <PlusCircle className="w-4 h-4 mr-2" /> add subtask
+        </Button>
+      )}
       {task.subtasks &&
         task.subtasks.length > 0 &&
         task.subtasks.map((subtask) => {
@@ -143,9 +133,11 @@ export const TaskCard = ({
         <div className="flex gap-2">
           <div>{task.id}</div>
           <div>{task.priority}</div>
-          {task.priority === 'high' && <div>{highPriorityIcon}</div>}
-          {task.priority === 'medium' && <div>{mediumPriorityIcon}</div>}
-          {task.priority === 'low' && <div>{lowPriorityIcon}</div>}
+          {task.priority === 'high' && <ChevronsUp className="text-red-500" />}
+          {task.priority === 'medium' && (
+            <ChevronUp className="text-yellow-500" />
+          )}
+          {task.priority === 'low' && <Minus className="text-blue-400" />}
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => updatePoints('down')}>-</button>

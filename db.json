@@ -12,10 +12,20 @@
         {
           "id": "test1",
           "label": "Test1 Label",
+          "checked": true
+        },
+        {
+          "id": 0.46577573714714515,
+          "label": "asdasd",
+          "checked": true
+        },
+        {
+          "id": "479e4c48-4eeb-4568-918a-d0e701de8fd8",
+          "label": "asdaddasd",
           "checked": false
         }
       ],
-      "points": 5,
+      "points": 8,
       "status": "done",
       "priority": "medium"
     },
@@ -36,11 +46,11 @@
       "priority": "medium"
     },
     {
-      "title": "Learn GraphQL",
+      "title": "Learn Graph",
       "id": "4",
       "subtasks": [],
       "points": 8,
-      "status": "inprogress",
+      "status": "todo",
       "priority": "low"
     },
     {
@@ -70,6 +80,14 @@
     {
       "title": "Learn MySQL",
       "id": "8",
+      "subtasks": [],
+      "points": 1,
+      "status": "todo",
+      "priority": "low"
+    },
+    {
+      "title": "asdasdasd",
+      "id": "e78bfe98-8cdb-4b10-a78b-8781ec6b1abc",
       "subtasks": [],
       "points": 1,
       "status": "todo",

@@ -1,13 +1,25 @@
 import { useEffect, useState } from 'react';
 import { TaskCard } from '@/components';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { TStatus, TTask } from '@/types';
-import { statuses } from '@/utils/data-tasks';
-import './App.css';
+import { priorities, statuses } from '@/utils/data-tasks';
+import { Plus } from 'lucide-react';
+import { v4 as uuid4 } from 'uuid';
+import { NewTaskForm, TaskFormData } from './components/new-task-form';
+import { Button } from './components/ui/button';
 
 function App() {
   const [tasks, setTasks] = useState<TTask[]>([]);
   const [currentlyHoveringOver, setCurrentlyHoveringOver] =
     useState<TStatus | null>(null);
+  const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
 
   const columns = statuses.map((status) => {
     const tasksInColumn = tasks.filter((task) => task.status === status);
@@ -37,6 +49,27 @@ function App() {
     setTasks(updatedTasks);
   };
 
+  const addNewTask = (data: TaskFormData) => {
+    const newTask = {
+      title: data.task,
+      id: uuid4(),
+      subtasks: [],
+      points: 1,
+      status: statuses[0],
+      priority: priorities[0],
+    };
+
+    fetch('http://localhost:3000/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTask),
+    });
+    setTasks([...tasks, newTask]);
+    setOpenAddTaskDialog(false);
+  };
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: TStatus) => {
     e.preventDefault();
     setCurrentlyHoveringOver(null);
@@ -55,23 +88,47 @@ function App() {
     <div className="flex w-screen h-screen divide-x">
       {columns.map((column) => (
         <div
+          key={column.status}
           className={`  ${
             currentlyHoveringOver === column.status ? 'bg-gray-100' : ''
-          } transition-colors duration-500`}
+          } transition-colors duration-500 w-64`}
           onDrop={(e) => handleDrop(e, column.status)}
           onDragOver={(e) => e.preventDefault()}
           onDragEnter={() => handleDragEnter(column.status)}
         >
-          <div className="flex justify-between p-2 text-3xl font-bold text-gray-600">
-            <h2 className="capitalize">{column.status}</h2>
-            {column.tasks.reduce(
-              (total, task) => total + (task?.points || 0),
-              0,
-            )}
+          <div className="flex justify-between p-2 text-xl font-bold text-gray-600 align-baseline">
+            <div className="flex">
+              <h2 className="mr-1 capitalize">{column.status}</h2>
+              {column.tasks.reduce(
+                (total, task) => total + (task?.points || 0),
+                0,
+              )}
+            </div>
+            <Dialog
+              open={openAddTaskDialog}
+              onOpenChange={setOpenAddTaskDialog}
+            >
+              <DialogTrigger>
+                <Button
+                  className="p-1 border rounded-xl bg-gray-50 hover:drop-shadow-sm"
+                  variant="secondary"
+                >
+                  <Plus size={18} className="mr-1" /> add task
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add new task</DialogTitle>
+                  <DialogDescription className="flex">
+                    <NewTaskForm onSubmit={addNewTask} />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
           <div className={'h-full'}>
             {column.tasks.map((task) => (
-              <TaskCard task={task} updateTask={updateTask} />
+              <TaskCard key={task.id} task={task} updateTask={updateTask} />
             ))}
           </div>
         </div>

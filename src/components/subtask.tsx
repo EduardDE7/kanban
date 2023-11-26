@@ -11,6 +11,7 @@ export function Subtask({ subtask, onChange }: TSubtaskProps) {
   return (
     <div className="flex items-center space-x-2">
       <Checkbox
+        className="w-4 h-4 rounded-full"
         id={subtask.id}
         checked={subtask.checked}
         onCheckedChange={handleCheckboxChange}
