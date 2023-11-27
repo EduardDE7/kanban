@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SubtaskAddForm, SubtaskFormData } from '@/components/subtask-add-form';
 import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
@@ -22,13 +23,14 @@ import { Input } from './ui/input';
 export const TaskCard = ({
   task,
   updateTask,
+  deleteTask,
 }: {
   task: TTask;
   updateTask: (task: TTask) => void;
+  deleteTask: (task: TTask) => void;
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
-  const [subtaskName, setSubtaskName] = useState('');
 
   const points = task.points || 0;
   const updatePoints = (direction: 'up' | 'down') => {
@@ -41,10 +43,20 @@ export const TaskCard = ({
     }
   };
 
-  function addSubtask() {
+  const handleDeleteSubtask = (subtaskId: string) => {
+    const updatedSubtasks = task.subtasks.filter(
+      (subtask) => subtask.id !== subtaskId,
+    );
+
+    updateTask({ ...task, subtasks: updatedSubtasks });
+  };
+
+  function addSubtask(data: SubtaskFormData) {
+    console.log(data);
+
     const newSubtask = {
       id: uuid4(),
-      label: subtaskName,
+      label: data.label,
       checked: false,
     };
 
@@ -54,7 +66,6 @@ export const TaskCard = ({
     });
 
     setIsAddingSubtask(false);
-    setSubtaskName('');
   }
 
   const handleSubtaskChange = (subtaskId: string, isChecked: boolean) => {
@@ -96,35 +107,15 @@ export const TaskCard = ({
             </SheetContent>
           </Sheet>
           <Button
+            onClick={() => deleteTask(task)}
             variant="transparent"
             className="hover:text-red-500"
-            size="icon"
+            size="auto"
           >
             <Trash size={16} />
           </Button>
         </div>
       </div>
-      {isAddingSubtask ? (
-        <div className="flex">
-          <input
-            autoFocus
-            onBlur={() => setIsAddingSubtask(false)}
-            value={subtaskName}
-            onChange={(e) => setSubtaskName(e.target.value)}
-          />
-          <Button variant="transparent" onClick={() => addSubtask()}>
-            <PlusCircle className="w-5 h-5 ml-2 text-gray-500" />
-          </Button>
-        </div>
-      ) : (
-        <Button
-          className="p-0 text-gray-500"
-          variant="transparent"
-          onClick={() => setIsAddingSubtask(true)}
-        >
-          <PlusCircle className="w-4 h-4 mr-2" /> add subtask
-        </Button>
-      )}
       {task.subtasks &&
         task.subtasks.length > 0 &&
         task.subtasks.map((subtask) => {
@@ -133,9 +124,23 @@ export const TaskCard = ({
               key={subtask.id}
               subtask={subtask}
               onChange={handleSubtaskChange}
+              onDelete={handleDeleteSubtask}
             />
           );
         })}
+      {isAddingSubtask ? (
+        <SubtaskAddForm onSubmit={addSubtask} />
+      ) : (
+        <Button
+          className="p-0 mt-1 text-xs text-gray-400 opacity-0 group-hover:opacity-100 hover:text-green-700"
+          variant="transparent"
+          size="auto"
+          onClick={() => setIsAddingSubtask(true)}
+        >
+          <PlusCircle className="w-4 h-4 mr-2" /> add subtask
+        </Button>
+      )}
+
       <div className="flex justify-between gap-5 py-2 text-sm text-gray-500">
         <div className="flex gap-2">
           {task.priority === 'high' && (
@@ -152,14 +157,14 @@ export const TaskCard = ({
           <div className="flex flex-col">
             <Button
               variant="transparent"
-              size="icon"
+              size="auto"
               onClick={() => updatePoints('up')}
             >
               <ChevronUp size={13} />
             </Button>
             <Button
               variant="transparent"
-              size="icon"
+              size="auto"
               onClick={() => updatePoints('down')}
             >
               <ChevronDown size={13} />

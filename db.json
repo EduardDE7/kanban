@@ -8,21 +8,6 @@
           "id": "test",
           "label": "Test Label",
           "checked": true
-        },
-        {
-          "id": "test1",
-          "label": "Test1 Label",
-          "checked": false
-        },
-        {
-          "id": 0.46577573714714515,
-          "label": "asdasd",
-          "checked": true
-        },
-        {
-          "id": "479e4c48-4eeb-4568-918a-d0e701de8fd8",
-          "label": "asdaddasd",
-          "checked": true
         }
       ],
       "points": 13,
@@ -32,38 +17,20 @@
     {
       "title": "Learn TypeScript",
       "id": "2",
-      "subtasks": [],
-      "points": 3,
+      "subtasks": [
+        {
+          "id": "19e63c43-771e-4584-bf3e-0d9fb2d873e8",
+          "label": "asdasdasd",
+          "checked": false
+        }
+      ],
+      "points": 13,
       "status": "inprogress",
       "priority": "high"
     },
     {
-      "title": "Learn Redux",
-      "id": "3",
-      "subtasks": [],
-      "points": 4,
-      "status": "todo",
-      "priority": "medium"
-    },
-    {
       "title": "Learn Graph",
       "id": "4",
-      "subtasks": [],
-      "points": 5,
-      "status": "todo",
-      "priority": "low"
-    },
-    {
-      "title": "Learn Node",
-      "id": "5",
-      "subtasks": [],
-      "points": 2,
-      "status": "todo",
-      "priority": "low"
-    },
-    {
-      "title": "Learn Express",
-      "id": "6",
       "subtasks": [],
       "points": 5,
       "status": "todo",
@@ -86,24 +53,16 @@
       "priority": "low"
     },
     {
-      "title": "asdasdasd",
-      "id": "e78bfe98-8cdb-4b10-a78b-8781ec6b1abc",
+      "title": "Lern Redux",
+      "id": "a117787f-cdc3-4ee4-aa88-41e89c14c919",
       "subtasks": [],
-      "points": 2,
+      "points": 1,
       "status": "todo",
       "priority": "low"
     },
     {
-      "title": "asdasdsad",
-      "id": "0c8bfe38-7d05-4ef6-b69a-e3160659d043",
-      "subtasks": [],
-      "points": 8,
-      "status": "inprogress",
-      "priority": "low"
-    },
-    {
-      "title": "asdasd",
-      "id": "efd45f8e-b419-4dec-8511-695f4d2ddc02",
+      "title": "adsasd",
+      "id": "18059617-9645-4532-9e8a-e4f7c33a2d8c",
       "subtasks": [],
       "points": 1,
       "status": "todo",

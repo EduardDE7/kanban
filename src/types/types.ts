@@ -10,6 +10,7 @@ export type TSubtask = {
 export type TSubtaskProps = {
   subtask: TSubtask;
   onChange: (subtaskId: string, isChecked: boolean) => void;
+  onDelete: (subtaskId: string) => void;
 };
 
 export type TTask = {

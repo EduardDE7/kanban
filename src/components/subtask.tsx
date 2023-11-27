@@ -1,20 +1,16 @@
-'use client';
-
 import { Checkbox } from '@/components/ui/checkbox';
 import { TSubtaskProps } from '@/types';
+import { Trash } from 'lucide-react';
+import { Button } from './ui';
 
-export function Subtask({ subtask, onChange }: TSubtaskProps) {
-  const handleCheckboxChange = () => {
-    onChange(subtask.id, !subtask.checked);
-  };
-
+export function Subtask({ subtask, onChange, onDelete }: TSubtaskProps) {
   return (
-    <div className="flex items-center space-x-2 text-sm">
+    <div className="flex items-center space-x-2 text-sm group/delete ">
       <Checkbox
         className="w-4 h-4 rounded-full"
         id={subtask.id}
         checked={subtask.checked}
-        onCheckedChange={handleCheckboxChange}
+        onCheckedChange={() => onChange(subtask.id, !subtask.checked)}
       />
       <label
         htmlFor={subtask.id}
@@ -22,6 +18,14 @@ export function Subtask({ subtask, onChange }: TSubtaskProps) {
       >
         {subtask.label}
       </label>
+      <Button
+        className="text-gray-300 opacity-0 group-hover/delete:opacity-100 hover:text-red-500"
+        variant="transparent"
+        size="auto"
+        onClick={() => onDelete(subtask.id)}
+      >
+        <Trash size={14} />
+      </Button>
     </div>
   );
 }

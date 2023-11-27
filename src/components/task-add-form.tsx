@@ -1,14 +1,12 @@
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+  Input,
+} from '@/components/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -46,19 +44,15 @@ export const NewTaskForm = ({ onSubmit }: NewTaskFormProps) => {
           name="task"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Task name</FormLabel>
               <FormControl>
                 <Input placeholder="task name" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button
-          className="p-1 px-2 border rounded-xlhover:drop-shadow-sm"
+          className="p-1 px-2 border rounded-xl hover:drop-shadow-sm"
           variant="default"
           type="submit"
         >

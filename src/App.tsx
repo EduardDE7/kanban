@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TaskCard } from '@/components';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { TStatus, TTask } from '@/types';
-import { priorities, statuses } from '@/utils/data-tasks';
+import { statuses } from '@/utils/data-tasks';
 import { Plus } from 'lucide-react';
-import { v4 as uuid4 } from 'uuid';
-import { NewTaskForm, TaskFormData } from './components/new-task-form';
+import { NewTaskForm } from './components/task-add-form';
 import { Button } from './components/ui/button';
+import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
   const [tasks, setTasks] = useState<TTask[]>([]);
+
+  const { updateTask, addNewTask, deleteTask } = useTaskManager(
+    tasks,
+    setTasks,
+  );
   const [currentlyHoveringOver, setCurrentlyHoveringOver] =
     useState<TStatus | null>(null);
   const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
@@ -21,47 +26,6 @@ function App() {
       tasks: tasksInColumn,
     };
   });
-
-  useEffect(() => {
-    fetch('http://localhost:3000/tasks')
-      .then((res) => res.json())
-      .then((data) => setTasks(data));
-  }, []);
-
-  const updateTask = (task: TTask) => {
-    fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(task),
-    });
-    const updatedTasks = tasks.map((t) => {
-      return t.id === task.id ? task : t;
-    });
-    setTasks(updatedTasks);
-  };
-
-  const addNewTask = (data: TaskFormData) => {
-    const newTask = {
-      title: data.task,
-      id: uuid4(),
-      subtasks: [],
-      points: 1,
-      status: statuses[0],
-      priority: priorities[0],
-    };
-
-    fetch('http://localhost:3000/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTask),
-    });
-    setTasks([...tasks, newTask]);
-    setOpenAddTaskDialog(false);
-  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: TStatus) => {
     e.preventDefault();
@@ -78,7 +42,7 @@ function App() {
   };
 
   return (
-    <div className="flex justify-center w-screen h-full divide-x ">
+    <div className="flex justify-center w-auto h-screen overflow-auto ">
       {columns.map((column) => (
         <div
           key={column.status}
@@ -115,7 +79,12 @@ function App() {
           </div>
           <div className={'h-full'}>
             {column.tasks.map((task) => (
-              <TaskCard key={task.id} task={task} updateTask={updateTask} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
             ))}
           </div>
         </div>
